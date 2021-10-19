@@ -1,5 +1,14 @@
 import { CommonEntity } from '../../common/entities/common.entity';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Auth } from '../../authentication/entities/auth.entity';
+import { Role } from '../../roles/entities/role.entity';
 
 @Entity({ name: 'users' })
 export class User extends CommonEntity {
@@ -23,4 +32,12 @@ export class User extends CommonEntity {
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   photo: string;
+
+  @OneToOne(() => Auth, (auth) => auth.user, { nullable: true })
+  @JoinColumn({ name: 'auth_id' })
+  authentication: Auth;
+
+  @ManyToOne(() => Role, (role) => role.user)
+  @JoinColumn({ name: 'role_id' })
+  role: Role;
 }

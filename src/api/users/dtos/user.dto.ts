@@ -27,7 +27,7 @@ export class createUserDto {
 
   @IsOptional()
   @IsString()
-  RFC: string;
+  rfc: string;
 
   @IsOptional()
   @IsUrl()
