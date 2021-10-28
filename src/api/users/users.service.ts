@@ -33,6 +33,14 @@ export class UsersService {
   async createUser(payload: createUserDto): Promise<User> {
     const newUser = this.userRep.create(payload);
 
+    const userByEmail = await this.userRep.findOne({
+      where: { email: newUser.email },
+    });
+    if (userByEmail)
+      throw new BadRequestException(
+        'Could not be create user, email duplicate',
+      );
+
     return await this.userRep.save(newUser);
   }
 

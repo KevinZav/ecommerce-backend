@@ -11,7 +11,6 @@ export class localStrategy extends PassportStrategy(Strategy, 'local') {
 
   async validate(username: string, password: string) {
     const authVerify = await this.authS.validateAuth(username, password);
-
     if (!authVerify)
       throw new UnauthorizedException(
         'Your username or password are not valid',

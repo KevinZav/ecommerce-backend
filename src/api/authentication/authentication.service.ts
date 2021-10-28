@@ -45,11 +45,11 @@ export class AuthenticationService {
     const auth = verifyActive
       ? await this.authRep.findOne({
           where: { username, isActive: true },
-          relations: ['user'],
+          relations: ['user', 'user.role'],
         })
       : await this.authRep.findOne({
           where: { username, isActive: true },
-          relations: ['user'],
+          relations: ['user', 'user.role'],
         });
     if (!auth)
       throw new NotFoundException('Could not be found auth by username');
@@ -77,7 +77,14 @@ export class AuthenticationService {
       email: auth.user.email,
       username: auth.username,
       type: 'login',
+      role: auth.user.role,
     };
+    if (auth.user.role) {
+      payload.role = {
+        name: auth.user.role.name,
+        description: auth.user.role.description,
+      };
+    }
     const token = this.jwtS.sign(payload);
 
     return token;
